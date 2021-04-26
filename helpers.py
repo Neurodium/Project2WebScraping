@@ -87,5 +87,24 @@ def bookTitle(url):
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        title = soup.find('div', {'class': 'product_main'}).find('h1').text
-    return title
+        book_title = soup.find('div', {'class': 'product_main'}).find('h1').text
+    return book_title
+
+#Fonction pour récupérer l'image du livre
+def bookImage(url):
+    response = requests.get(url)
+
+    if response.ok:
+        soup = BeautifulSoup(response.text, 'lxml')
+        image_url = 'http://books.toscrape.com/' + re.sub("../../media/cache",'media/cache', soup.find('img')['src'])
+    return image_url
+
+#Fonction pour récupérer la catégorie du livre
+def bookCategory(url):
+    response = requests.get(url)
+    response.encoding = 'UTF-8'
+
+    if response.ok:
+        soup = BeautifulSoup(response.text, 'lxml')
+        bookk_category = soup.find('ul',{'class':'breadcrumb'}).findAll('a')[2].text
+    return book_category
