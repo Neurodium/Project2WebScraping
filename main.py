@@ -1,4 +1,4 @@
-from helpers import getAllCategories, getBooksfromCategory,writeBookValues, writeUrls, bookTitle
+from helpers import getAllCategories, getBooksfromCategory,writeBookValues, writeUrls, bookTitle, bookImage, bookCategory, saveImage, cleanBookTitle
 
 #Adresse du site à scrapper
 url = 'http://books.toscrape.com/index.html'
@@ -47,10 +47,12 @@ current_book = 1
 for u in all_urls:
     print("Traitement du livre: "+ str(bookTitle(u))) #Affichage du titre du livre dont on récupère les données
     writeBookValues('books.csv', u)
-    writeUrls('urls.csv', u)
+    # writeUrls('urls.csv', u)
+    # saveImage(bookCategory(u), cleanBookTitle(u), bookImage(u))
     progress_book = round((current_book/nb_book_url)*100, 2)
     print("Progression....... " + str(progress_book) + " %") #Affichage de la progression de la récupération de données
     current_book +=1
+
 
 #Affichage de la fin du traitement des données
 print("Le scrapping de l'adresse: " + str(url) + " est terminé.")
