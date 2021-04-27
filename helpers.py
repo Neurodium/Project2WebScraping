@@ -152,9 +152,18 @@ def book_category(url):
         book_category = soup.find('ul',{'class':'breadcrumb'}).findAll('a')[2].text
     return book_category
 
+# Function to fetch the UPC
+def book_upc(url):
+    response = requests.get(url)
+    response.encoding = 'UTF-8'
+
+    if response.ok:
+        soup = BeautifulSoup(response.text, 'lxml')
+        universal_product_code = soup.find('table', {'class': 'table table-striped'}).findAll('td')[0].text
+    return universal_product_code
+
 
 # Fucntion to save image into a folder
-def save_image(path, category, title, url):
-    filename = str(category)+"_"+str(title)+".jpg"
-    print(str(path)+"\\"+str(filename))
+def save_image(path, category, title, upc, url):
+    filename = str(category)+"_"+str(upc)+"_"+str(title)+".jpg"
     urllib.request.urlretrieve(url, str(path)+"\\"+str(filename))
