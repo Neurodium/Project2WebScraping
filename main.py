@@ -1,58 +1,62 @@
-from helpers import getAllCategories, getBooksfromCategory,writeBookValues, writeUrls, bookTitle, bookImage, bookCategory, saveImage, cleanBookTitle
+from helpers import get_all_categories, get_books_from_category,write_book_values, book_title, book_image, book_category, save_image, clean_book_title, script_init, get_image_folder
 
-#Adresse du site à scrapper
+
+filename = input("Please enter the csv filename you want to save the data into: ") + ".csv"
+image_folder = input("Please enter the folder name where you want to save the images: ")
+print("\n")
+
+# Website to be scrapped
 url = 'http://books.toscrape.com/index.html'
 
-#Creation du dictionnaire contenant les catégories et leur lien associé
-categories = getAllCategories(url)
+print("Webscrapping of website '" + str(url) + "' starts:\n")
 
-print(str(len(categories)) + " categories ont été trouvées.\n")
+# Initialize script creating image folder if does not exist and create or empty data file
+path = get_image_folder(image_folder)
+print(path)
+script_init(image_folder, path, filename)
 
-#Création d'une liste contenant les noms des catégories
+
+# Dictionnary creation with key categories and url values
+categories = get_all_categories(url)
+
+print(str(len(categories)) + " categories have been found.\n")
+
+# Category names list creation
 cat_names = categories.keys()
 all_urls = []
 current_category = 1
 
-#Affichage du débutg du traitement de récupération des adresses par catégorie
-print("Récupération de toutes les adresses de chaque livre\n")
+# Display message for starting retrieving all books url
+print("Fetching all books\n")
 
-#Création d'une liste contenant toutes les url des livres du site
+# List creation of all books urls
 for i in cat_names:
-    print("Récupération des livres de la catégorie: " + str(i))#Affichage de la catégorie en cours de traitement
-    all_urls += getBooksfromCategory(categories[i])
+    print("Fetching books of category : " + str(i))#Affichage de la catégorie en cours de traitement
+    all_urls += get_books_from_category(categories[i])
     progress_url = round((current_category / len(cat_names))*100, 2)
-    print("Progression......" + str(progress_url) + " %")#Affichage de la progression de récupération des urls
+    print("Progress......" + str(progress_url) + " %\n")#Affichage de la progression de récupération des urls
     current_category += 1
 
-#Crée le fichier pour contenir toutes les adresses en cas de vérification, vide le fichier si déjà existant
-with open('urls.csv', 'w') as file:
-    file.write('Address\n')
-
-#Identifie le nombre de livres du site
+# Identify the number of books
 nb_book_url = len(all_urls)
 
-#Affichage du nombre de livres trouvés
-print(str(nb_book_url) + " livres ont été trouvés.")
+# Display message showing number of books found
+print(str(nb_book_url) + " books found.\n")
 
-#Crée le fichier de récupération des données de chaque livre, vide le fichier si déjà existant
-with open('books.csv', 'w') as file:
-    file.write('Product Page URL;Universal Product Code;Title;Price Including Tax;Price Excluding Tax;Number Available;Product Description;Category;Review Rating;Image Url\n')
-
-#Affichage du début du traitement des données
-print("Démarrage de la récupération des données.")
+# Display message for starting data fetching process
+print("Start fetching books data.\n")
 
 current_book = 1
 
-#Importe les données dans le fichier books.csv et urls.csv
+# Import data in specified file and save images in the folder specified
 for u in all_urls:
-    print("Traitement du livre: "+ str(bookTitle(u))) #Affichage du titre du livre dont on récupère les données
-    writeBookValues('books.csv', u)
-    # writeUrls('urls.csv', u)
-    # saveImage(bookCategory(u), cleanBookTitle(u), bookImage(u))
+    print("Current book : "+ str(book_title(u))) #Affichage du titre du livre dont on récupère les données
+    write_book_values(filename, u)
+    save_image(path, book_category(u), clean_book_title(u), book_image(u))
     progress_book = round((current_book/nb_book_url)*100, 2)
-    print("Progression....... " + str(progress_book) + " %") #Affichage de la progression de la récupération de données
+    print("Progress....... " + str(progress_book) + " %") #Affichage de la progression de la récupération de données
     current_book +=1
 
 
-#Affichage de la fin du traitement des données
-print("Le scrapping de l'adresse: " + str(url) + " est terminé.")
+# Display script end message
+print("Webscrapping of : '" + str(url) + "' is over.")

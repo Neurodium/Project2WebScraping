@@ -1,17 +1,34 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-from PIL import Image
 import urllib.request
 import os
 
-# Fonction pour écrire une url dans un fichier
-def writeUrls(filename, url):
-    with open(filename, 'a') as file:
-        file.write(url + '\n')
 
-# Fonction pour écrire les données d'un livre dans un fichier
-def writeBookValues(filename, url):
+# Function to get the image folder
+def get_image_folder(image_folder):
+    current_folder = os.getcwd()
+    path = os.path.join(current_folder, image_folder)
+
+    return path
+
+
+# Function to initialize the script
+def script_init(image_folder, path, filename):
+    if os.path.isdir(image_folder):
+        pass
+    else:
+        os.mkdir(path)
+
+    with open(filename, 'w') as file:
+        file.write(
+            'Product Page URL;Universal Product Code;Title;Price Including Tax;Price Excluding Tax;Number Available;Product Description;Category;Review Rating;Image Url\n')
+
+    return path
+
+
+# Function to write the book data within a file
+def write_book_values(filename, url):
     response = requests.get(url)
     response.encoding = 'UTF-8'
     # Vérification que la page est accessible
@@ -42,8 +59,9 @@ def writeBookValues(filename, url):
                    + price_excluding_tax + ";" + number_available + ";" + product_description + ";" + category + ";"
                    + review_rating + ";" + image_url +'\n')
 
-# Fonction pour créer un dictionnaire avec la catégorie en clé et l'url en valeur
-def getAllCategories(url):
+
+# Function to create a dictionary with category keys and url values
+def get_all_categories(url):
     response = requests.get(url)
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
@@ -56,8 +74,9 @@ def getAllCategories(url):
             category[cat_name] = cat_address
     return category
 
-# Fonction pour récupérer les adresses url de chaque livre dans une catégorie
-def getBooksfromCategory(cat_url):
+
+# Funcvtion to get all books urls from a category
+def get_books_from_category(cat_url):
     nextpage = "next"
     num_page = 1
     links = []
@@ -86,8 +105,9 @@ def getBooksfromCategory(cat_url):
             num_page += 1
     return links
 
-# Fonction pour afficher le titre du livre
-def bookTitle(url):
+
+# Function to fetch the book title of an url
+def book_title(url):
     response = requests.get(url)
     response.encoding = 'UTF-8'
 
@@ -96,22 +116,24 @@ def bookTitle(url):
         book_title = soup.find('div', {'class': 'product_main'}).find('h1').text
     return book_title
 
-# Fonction pour avoir un titre sans caractères spéciaux
-def cleanBookTitle(url):
+
+# Function to get the book title without forbidden caracters to create the filename
+def clean_book_title(url):
     response = requests.get(url)
     response.encoding = 'UTF-8'
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        bookTitle = soup.find('div', {'class': 'product_main'}).find('h1').text
+        clean_book_title = soup.find('div', {'class': 'product_main'}).find('h1').text
 
         chars = ['"', '/', "`", "'", "*", "_", "{", "}", "[", "]", "(", ")", ">", "#", "+", "-", ".", "!", "$", ":", ",", "\ ", "?"]
         for c in chars:
-            bookTitle = bookTitle.replace(c, "")
-    return bookTitle
+            clean_book_title = clean_book_title.replace(c, "")
+    return clean_book_title
 
-# Fonction pour récupérer l'image du livre
-def bookImage(url):
+
+# Function to fetch the book image url
+def book_image(url):
     response = requests.get(url)
 
     if response.ok:
@@ -119,8 +141,9 @@ def bookImage(url):
         image_url = 'http://books.toscrape.com/' + re.sub("../../media/cache",'media/cache', soup.find('img')['src'])
     return image_url
 
-# Fonction pour récupérer la catégorie du livre
-def bookCategory(url):
+
+# Function to fetch the book category
+def book_category(url):
     response = requests.get(url)
     response.encoding = 'UTF-8'
 
@@ -130,8 +153,8 @@ def bookCategory(url):
     return book_category
 
 
-# Fonction de sauvegarde d'une image dans un dossier
-def saveImage(category, title, url):
-    image_folder = os.getcwd() + "/image/"
+# Fucntion to save image into a folder
+def save_image(path, category, title, url):
     filename = str(category)+"_"+str(title)+".jpg"
-    urllib.request.urlretrieve(url, str(image_folder)+str(filename))
+    print(str(path)+"\\"+str(filename))
+    urllib.request.urlretrieve(url, str(path)+"\\"+str(filename))
