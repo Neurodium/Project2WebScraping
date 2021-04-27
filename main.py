@@ -3,9 +3,8 @@ from helpers import get_all_categories, get_books_from_category,write_book_value
     save_image, clean_book_title, script_init, get_image_folder
 
 
-filename = input("Please enter the csv filename you want to save the data into: ") + ".csv"
-image_folder = input("Please enter the folder name where you want to save the images: ")
-print("\n")
+filename = 'books.csv'
+image_folder = "Image"
 
 # Website to be scrapped
 url = 'http://books.toscrape.com/index.html'

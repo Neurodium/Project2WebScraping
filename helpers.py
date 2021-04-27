@@ -166,4 +166,4 @@ def book_upc(url):
 # Fucntion to save image into a folder
 def save_image(path, category, title, upc, url):
     filename = str(category)+"_"+str(upc)+"_"+str(title)+".jpg"
-    urllib.request.urlretrieve(url, str(path)+"\\"+str(filename))
+    urllib.request.urlretrieve(url, str(path)+"/"+str(filename))
