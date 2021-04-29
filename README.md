@@ -30,4 +30,10 @@ L'exécution du script nécessitera:
 	(Documentation d'installation de modules python: https://docs.python.org/fr/3.6/installing/index.html)
 	(Voir requirements.txt)
 
+***
+## Utilisation
+***
+Exécuter le script en utilisant 'main.py', les données seront sauvegardées dans le fichier books.csv et les images dans le dossier 'Images'.
+Les données dans le fichier books.csv sont encodées au format 'UTF-8', si les données sont lues dans un tableur, il faudra spécifier ce format de fichier pour lire les données.
+
 
