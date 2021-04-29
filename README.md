@@ -21,12 +21,13 @@ Et sauvegardera aussi toutes les images de couvertures de livres dans un dossier
 ***
 ## Installation
 ***
-L'exécution du script nécessitera:\
-* l'installation de python 3: https://www.python.org/downloads/
-	(Documentation d'installation: https://fr.wikihow.com/installer-Python)
+L'exécution du script nécessitera:
+* l'installation de python 3: https://www.python.org/downloads/\
+	(Documentation d'installation de python: https://fr.wikihow.com/installer-Python)
 * l'installation du module **requests**
 * l'installation du module **beautifulsoup4**
-* l'installation du module **lxml**
-	(Documentation d'installation: https://docs.python.org/fr/3.6/installing/index.html)
+* l'installation du module **lxml**\
+	(Documentation d'installation de modules python: https://docs.python.org/fr/3.6/installing/index.html)
+	(Voir requirements.txt)
 
 
