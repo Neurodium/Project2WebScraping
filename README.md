@@ -5,7 +5,7 @@
 Dans ce projet, l'utilisation du script permettra de récupérer des données contenues dans les pages HTML du site web BooksToScrape:\
 **http://books.toscrape.com/**
 
-Le script va récupérer les informations suivantes dans chaque page et les enregistrer dans un fichier 'books.csv':\ 
+Le script va récupérer les informations suivantes dans chaque page et les enregistrer dans un fichier 'books.csv': 
 * Product Page URL
 * Universal Product Code (UPC)
 * Title
@@ -17,15 +17,16 @@ Le script va récupérer les informations suivantes dans chaque page et les enre
 * Review Rating
 * Image Url
 
-Et sauvegardera aussi toutes les images de couvertures de livres dans un dossier 'Images'.\
+Et sauvegardera aussi toutes les images de couvertures de livres dans un dossier 'Images'.
 ***
 ## Installation
 ***
 L'exécution du script nécessitera:\
-* l'installation de python 3: https://www.python.org/downloads/ \
+* l'installation de python 3: https://www.python.org/downloads/
 	(Documentation d'installation: https://fr.wikihow.com/installer-Python)
-* l'installation du module**requests**
-* l'installation du module**beautifulsoup4**\
+* l'installation du module **requests**
+* l'installation du module **beautifulsoup4**
+* l'installation du module **lxml**
 	(Documentation d'installation: https://docs.python.org/fr/3.6/installing/index.html)
 
 
