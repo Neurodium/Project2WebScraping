@@ -20,23 +20,28 @@ def get_book_folder(book_folder):
 
 
 # Function to initialize the script
-def script_init(image_folder, path, filename):
+def folder_init(image_folder, image_path, book_folder, book_path):
     if os.path.isdir(image_folder):
         pass
     else:
-        os.mkdir(path)
+        os.mkdir(image_path)
+
+    if os.path.isdir(book_folder):
+        pass
+    else:
+        os.mkdir(book_path)
 
 
-
+#Function to create/init category csv files:
+def init_csv(category, book_path):
+    filename = str(book_path) + "/" + str(category) + ".csv"
     with open(filename, 'w') as file:
         file.write(
             'Product Page URL;Universal Product Code;Title;Price Including Tax;Price Excluding Tax;Number Available;Product Description;Category;Review Rating;Image Url\n')
 
-    return path
-
 
 # Function to write the book data within a file
-def write_book_values(url):
+def write_book_values(url, book_path):
     response = requests.get(url)
     response.encoding = 'UTF-8'
     # Vérification que la page est accessible
@@ -60,7 +65,7 @@ def write_book_values(url):
         review_rating = str(soup.find('p', {'class': 'star-rating'})['class'][1])
         image_url = 'http://books.toscrape.com/' + re.sub("../../media/cache", 'media/cache', soup.find('img')['src'])
 
-    filename = str(category)+".csv"
+    filename = str(book_path) + "/" + str(category)+".csv"
 
     with open(filename, 'a', encoding='UTF-8') as file:
         file.write(product_page_url + ";" + universal_product_code + ";" + title + ";" + price_including_tax + ";"
