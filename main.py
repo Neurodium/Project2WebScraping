@@ -3,8 +3,8 @@ from helpers import get_all_categories, get_books_from_category,write_book_value
     save_image, clean_book_title, script_init, get_image_folder
 
 
-filename = 'books.csv'
-image_folder = "Image"
+image_folder = "Images"
+book_folder = "Books"
 
 # Website to be scrapped
 url = 'http://books.toscrape.com/index.html'
@@ -13,7 +13,8 @@ print("Webscrapping of website '" + str(url) + "' starts:\n")
 
 # Initialize script creating image folder if does not exist and create or empty data file
 path = get_image_folder(image_folder)
-print(path)
+
+print("Data will be stored in "+ str(filename) + " and covers will bve stored in folder " + str(image_folder)+"\n")
 script_init(image_folder, path, filename)
 
 
