@@ -65,13 +65,13 @@ current_book = 1
 for u in all_urls:
     # Affichage du titre du livre dont on récupère les données
     print("Current book : " + str(book_title(u)))
-    write_book_values(u, book_path)
-    save_image(
+    img_path = save_image(
         image_path,
         book_category(u),
         book_upc(u),
         clean_book_title(u),
         book_image(u))
+    write_book_values(u, book_path, img_path)
     progress_book = round((current_book / nb_book_url) * 100, 2)
     # Affichage de la progression de la récupération de données
     print("Progress....... " + str(progress_book) + " %\n")

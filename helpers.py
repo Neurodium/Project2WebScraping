@@ -9,14 +9,14 @@ import os
 def get_image_folder(image_folder):
     current_folder = os.getcwd()
     image_path = os.path.join(current_folder, image_folder)
-
+    # Return the path to the image folder
     return image_path
 
 
 def get_book_folder(book_folder):
     current_folder = os.getcwd()
     book_path = os.path.join(current_folder, book_folder)
-
+    # Return the path to the folder containing the csv files
     return book_path
 
 
@@ -38,14 +38,25 @@ def init_csv(category, book_path):
     filename = str(book_path) + "/" + str(category) + ".csv"
     with open(filename, 'w') as file:
         file.write(
-            'Product Page URL;Universal Product Code;Title;Price Including Tax;Price Excluding Tax;Number Available;Product Description;Category;Review Rating;Image Url\n')
+            'Product Page URL;'
+            'Universal Product Code;'
+            'Title;'
+            'Price Including Tax;'
+            'Price Excluding Tax;'
+            'Number Available;'
+            'Product Description;'
+            'Category;'
+            'Review Rating;'
+            'Image Url;'
+            'Image Path'
+            '\n')
 
 
 # Function to write the book data within a file
-def write_book_values(url, book_path):
+def write_book_values(url, book_path, img_path):
     response = requests.get(url)
     response.encoding = 'UTF-8'
-    # Vérification que la page est accessible
+    # Check if webpage is reachable
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
         product_page_url = response.url
@@ -58,7 +69,7 @@ def write_book_values(url, book_path):
             'table', {'class': 'table table-striped'}).findAll('td')[2].text
         number_available = re.findall(
             '\\d+', soup.find('table', {'class': 'table table-striped'}).findAll('td')[5].text)[0]
-        # Recherche si un livre ne possède pas de description
+        # Check if a book does have a product description
         if soup.find(
             'article', {
                 'class': 'product_page'}).find(
@@ -69,8 +80,7 @@ def write_book_values(url, book_path):
                     'class': 'product_page'}).find(
                 'p', {
                     'class': None}).text
-            # Remplace les ; de la description par des , pour respecter
-            # l'alignement des colonnes
+            # Replace ";" of description by "," to alifn csv columns
             product_description = re.sub(";", ",", product_description)
         else:
             product_description = ""
@@ -106,6 +116,8 @@ def write_book_values(url, book_path):
             review_rating +
             ";" +
             image_url +
+            ";" +
+            img_path +
             '\n')
 
 
@@ -126,7 +138,7 @@ def get_all_categories(url):
     return category
 
 
-# Funcvtion to get all books urls from a category
+# Function to get all books urls from a category
 def get_books_from_category(cat_url):
     nextpage = "next"
     num_page = 1
@@ -159,6 +171,7 @@ def get_books_from_category(cat_url):
                 else:
                     nextpage = "stop"
             num_page += 1
+    # Return list of
     return links
 
 
@@ -169,9 +182,9 @@ def book_title(url):
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        book_title = soup.find(
+        res_book_title = soup.find(
             'div', {'class': 'product_main'}).find('h1').text
-    return book_title
+    return res_book_title
 
 
 # Function to get the book title without forbidden caracters to create the
@@ -182,7 +195,7 @@ def clean_book_title(url):
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        clean_book_title = soup.find(
+        res_clean_book_title = soup.find(
             'div', {'class': 'product_main'}).find('h1').text
 
         chars = [
@@ -210,8 +223,8 @@ def clean_book_title(url):
             "\\ ",
             "?"]
         for c in chars:
-            clean_book_title = clean_book_title.replace(c, "")
-    return clean_book_title
+            res_clean_book_title = res_clean_book_title.replace(c, "")
+    return res_clean_book_title
 
 
 # Function to fetch the book image url
@@ -232,9 +245,9 @@ def book_category(url):
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        book_category = soup.find(
+        res_book_category = soup.find(
             'ul', {'class': 'breadcrumb'}).findAll('a')[2].text
-    return book_category
+    return res_book_category
 
 # Function to fetch the UPC
 
@@ -254,3 +267,5 @@ def book_upc(url):
 def save_image(path, category, title, upc, url):
     filename = str(category) + "_" + str(upc) + "_" + str(title) + ".jpg"
     urllib.request.urlretrieve(url, str(path) + "/" + str(filename))
+    # Give the path of the image
+    return str(path) + "/" + str(filename)

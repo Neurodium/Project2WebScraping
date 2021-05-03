@@ -39,32 +39,19 @@ Puis activer l'environnement:
 	source env/bin/activate
 ou sous windows:
 
-	source env/Scripts/activate.bat
+	{path to venv}\\Scripts\\activate.bat
 
 ### 3. Installation des modules
 \
-Installation du module **requests**
+Installation des modules **requests**, **beautifulsoup4**, **lxml**
 
-	pip install requests
-
-Installation du module **beautifulsoup4**
-
-	pip install beautifulsoup4
-
-Installation du module **lxml**
-
-	pip install lxml
-
-Pour consulter les versions utilisées, consulter
-
-	(requirements.txt)
-
+	pip install -r requirements.txt
 
 
 ***
 ## Utilisation
 ***
 Exécuter le script en utilisant 'main.py', les données des livres seront sauvegardées par catégorie dans le dossier 'Books' et les images dans le dossier 'Images'.\
-Les données dans les fichiers csv sont encodées au format 'UTF-8', si les données sont lues dans un tableur, il faudra spécifier ce format de fichier pour lire les données.
-
+Les données dans les fichiers csv sont encodées au format 'UTF-8', si les données sont lues dans un tableur, il faudra spécifier ce format de fichier pour lire les données.\
+Le séparateur utilisé est le ";".
 
