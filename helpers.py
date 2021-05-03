@@ -12,6 +12,7 @@ def get_image_folder(image_folder):
 
     return image_path
 
+
 def get_book_folder(book_folder):
     current_folder = os.getcwd()
     book_path = os.path.join(current_folder, book_folder)
@@ -32,7 +33,7 @@ def folder_init(image_folder, image_path, book_folder, book_path):
         os.mkdir(book_path)
 
 
-#Function to create/init category csv files:
+# Function to create/init category csv files:
 def init_csv(category, book_path):
     filename = str(book_path) + "/" + str(category) + ".csv"
     with open(filename, 'w') as file:
@@ -48,29 +49,64 @@ def write_book_values(url, book_path):
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
         product_page_url = response.url
-        universal_product_code = soup.find('table', {'class': 'table table-striped'}).findAll('td')[0].text
+        universal_product_code = soup.find(
+            'table', {'class': 'table table-striped'}).findAll('td')[0].text
         title = soup.find('div', {'class': 'product_main'}).find('h1').text
-        price_including_tax = soup.find('table', {'class': 'table table-striped'}).findAll('td')[3].text
-        price_excluding_tax = soup.find('table', {'class': 'table table-striped'}).findAll('td')[2].text
-        number_available = \
-            re.findall('\d+', soup.find('table', {'class': 'table table-striped'}).findAll('td')[5].text)[0]
+        price_including_tax = soup.find(
+            'table', {'class': 'table table-striped'}).findAll('td')[3].text
+        price_excluding_tax = soup.find(
+            'table', {'class': 'table table-striped'}).findAll('td')[2].text
+        number_available = re.findall(
+            '\\d+', soup.find('table', {'class': 'table table-striped'}).findAll('td')[5].text)[0]
         # Recherche si un livre ne possède pas de description
-        if soup.find('article', {'class': 'product_page'}).find('p', {'class': None}) != None:
-            product_description = soup.find('article', {'class': 'product_page'}).find('p', {'class': None}).text
-            # Remplace les ; de la description par des , pour respecter l'alignement des colonnes
+        if soup.find(
+            'article', {
+                'class': 'product_page'}).find(
+            'p', {
+                'class': None}) is not None:
+            product_description = soup.find(
+                'article', {
+                    'class': 'product_page'}).find(
+                'p', {
+                    'class': None}).text
+            # Remplace les ; de la description par des , pour respecter
+            # l'alignement des colonnes
             product_description = re.sub(";", ",", product_description)
         else:
             product_description = ""
-        category = soup.find('ul', {'class': 'breadcrumb'}).findAll('a')[2].text
-        review_rating = str(soup.find('p', {'class': 'star-rating'})['class'][1])
-        image_url = 'http://books.toscrape.com/' + re.sub("../../media/cache", 'media/cache', soup.find('img')['src'])
+        category = soup.find(
+            'ul', {'class': 'breadcrumb'}).findAll('a')[2].text
+        review_rating = str(
+            soup.find(
+                'p', {
+                    'class': 'star-rating'})['class'][1])
+        image_url = 'http://books.toscrape.com/' + \
+            re.sub("../../media/cache", 'media/cache', soup.find('img')['src'])
 
-    filename = str(book_path) + "/" + str(category)+".csv"
+    filename = str(book_path) + "/" + str(category) + ".csv"
 
     with open(filename, 'a', encoding='UTF-8') as file:
-        file.write(product_page_url + ";" + universal_product_code + ";" + title + ";" + price_including_tax + ";"
-                   + price_excluding_tax + ";" + number_available + ";" + product_description + ";" + category + ";"
-                   + review_rating + ";" + image_url +'\n')
+        file.write(
+            product_page_url +
+            ";" +
+            universal_product_code +
+            ";" +
+            title +
+            ";" +
+            price_including_tax +
+            ";" +
+            price_excluding_tax +
+            ";" +
+            number_available +
+            ";" +
+            product_description +
+            ";" +
+            category +
+            ";" +
+            review_rating +
+            ";" +
+            image_url +
+            '\n')
 
 
 # Function to create a dictionary with category keys and url values
@@ -79,11 +115,13 @@ def get_all_categories(url):
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
         category = {}
-        get_cats = soup.find('ul', {'class':'nav-list'}).find('ul').findAll('li')
-        #Associer chaque catégorie à une adresse url
+        get_cats = soup.find(
+            'ul', {'class': 'nav-list'}).find('ul').findAll('li')
+        # Associer chaque catégorie à une adresse url
         for get_cat in get_cats:
             cat_name = re.sub("\n", "", get_cat.find('a').text).strip()
-            cat_address = "http://books.toscrape.com/" + get_cat.find('a')['href']
+            cat_address = "http://books.toscrape.com/" + \
+                get_cat.find('a')['href']
             category[cat_name] = cat_address
     return category
 
@@ -102,16 +140,21 @@ def get_books_from_category(cat_url):
             # Récupération de tous les livres de la page
             for div in divs:
                 a = div.find('a')
-                link = (a['href']).replace("../../..","http://books.toscrape.com/catalogue")
+                link = (
+                    a['href']).replace(
+                    "../../..",
+                    "http://books.toscrape.com/catalogue")
                 links.append(link)
-                # Si le bouton next est présent alors la boucle continue sinon elle s'arrête
-                if soup.find('li',{'class':'next'}) != None:
+                # Si le bouton next est présent alors la boucle continue sinon
+                # elle s'arrête
+                if soup.find('li', {'class': 'next'}) is not None:
                     nextpage = "next"
                     # Condition pour donner le nom de la page suivante
                     if cat_url.find('index.html') != -1:
                         cat_url = cat_url.replace("index.html", "page-2.html")
                     else:
-                        cat_url = cat_url.replace("page-"+str(num_page)+".html", "page-"+ str(num_page+1) +".html")
+                        cat_url = cat_url.replace(
+                            "page-" + str(num_page) + ".html", "page-" + str(num_page + 1) + ".html")
 
                 else:
                     nextpage = "stop"
@@ -126,20 +169,46 @@ def book_title(url):
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        book_title = soup.find('div', {'class': 'product_main'}).find('h1').text
+        book_title = soup.find(
+            'div', {'class': 'product_main'}).find('h1').text
     return book_title
 
 
-# Function to get the book title without forbidden caracters to create the filename
+# Function to get the book title without forbidden caracters to create the
+# filename
 def clean_book_title(url):
     response = requests.get(url)
     response.encoding = 'UTF-8'
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        clean_book_title = soup.find('div', {'class': 'product_main'}).find('h1').text
+        clean_book_title = soup.find(
+            'div', {'class': 'product_main'}).find('h1').text
 
-        chars = ['"', '/', "`", "'", "*", "_", "{", "}", "[", "]", "(", ")", ">", "#", "+", "-", ".", "!", "$", ":", ",", "\ ", "?"]
+        chars = [
+            '"',
+            '/',
+            "`",
+            "'",
+            "*",
+            "_",
+            "{",
+            "}",
+            "[",
+            "]",
+            "(",
+            ")",
+            ">",
+            "#",
+            "+",
+            "-",
+            ".",
+            "!",
+            "$",
+            ":",
+            ",",
+            "\\ ",
+            "?"]
         for c in chars:
             clean_book_title = clean_book_title.replace(c, "")
     return clean_book_title
@@ -151,7 +220,8 @@ def book_image(url):
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        image_url = 'http://books.toscrape.com/' + re.sub("../../media/cache",'media/cache', soup.find('img')['src'])
+        image_url = 'http://books.toscrape.com/' + \
+            re.sub("../../media/cache", 'media/cache', soup.find('img')['src'])
     return image_url
 
 
@@ -162,21 +232,25 @@ def book_category(url):
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        book_category = soup.find('ul',{'class':'breadcrumb'}).findAll('a')[2].text
+        book_category = soup.find(
+            'ul', {'class': 'breadcrumb'}).findAll('a')[2].text
     return book_category
 
 # Function to fetch the UPC
+
+
 def book_upc(url):
     response = requests.get(url)
     response.encoding = 'UTF-8'
 
     if response.ok:
         soup = BeautifulSoup(response.text, 'lxml')
-        universal_product_code = soup.find('table', {'class': 'table table-striped'}).findAll('td')[0].text
+        universal_product_code = soup.find(
+            'table', {'class': 'table table-striped'}).findAll('td')[0].text
     return universal_product_code
 
 
 # Fucntion to save image into a folder
 def save_image(path, category, title, upc, url):
-    filename = str(category)+"_"+str(upc)+"_"+str(title)+".jpg"
-    urllib.request.urlretrieve(url, str(path)+"/"+str(filename))
+    filename = str(category) + "_" + str(upc) + "_" + str(title) + ".jpg"
+    urllib.request.urlretrieve(url, str(path) + "/" + str(filename))

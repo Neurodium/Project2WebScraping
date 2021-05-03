@@ -1,4 +1,4 @@
-from helpers import get_all_categories, get_books_from_category,write_book_values, \
+from helpers import get_all_categories, get_books_from_category, write_book_values, \
     book_title, book_image, book_category, book_upc, \
     save_image, clean_book_title, folder_init, init_csv, get_image_folder, get_book_folder
 
@@ -11,11 +11,17 @@ url = 'http://books.toscrape.com/index.html'
 
 print("Webscrapping of website '" + str(url) + "' starts:\n")
 
-# Initialize script creating image folder if does not exist and create or empty data file
+# Initialize script creating image folder if does not exist and create or
+# empty data file
 image_path = get_image_folder(image_folder)
-book_path =  get_book_folder(book_folder)
+book_path = get_book_folder(book_folder)
 
-print("Data will be stored in folder "+ str(book_folder) + " and covers will be stored in folder " + str(image_folder)+"\n")
+print(
+    "Data will be stored in folder " +
+    str(book_folder) +
+    " and covers will be stored in folder " +
+    str(image_folder) +
+    "\n")
 folder_init(image_folder, image_path, book_folder, book_path)
 
 
@@ -39,7 +45,7 @@ for i in cat_names:
     # Affichage de la catégorie en cours de traitement
     print("Fetching books of category : " + str(i))
     all_urls += get_books_from_category(categories[i])
-    progress_url = round((current_category / len(cat_names))*100, 2)
+    progress_url = round((current_category / len(cat_names)) * 100, 2)
     # Affichage de la progression de récupération des urls
     print("Progress......" + str(progress_url) + " %\n")
     current_category += 1
@@ -57,12 +63,19 @@ current_book = 1
 
 # Import data in specified file and save images in the folder specified
 for u in all_urls:
-    print("Current book : "+ str(book_title(u))) #Affichage du titre du livre dont on récupère les données
+    # Affichage du titre du livre dont on récupère les données
+    print("Current book : " + str(book_title(u)))
     write_book_values(u, book_path)
-    save_image(image_path, book_category(u), book_upc(u), clean_book_title(u), book_image(u))
-    progress_book = round((current_book/nb_book_url)*100, 2)
-    print("Progress....... " + str(progress_book) + " %\n") #Affichage de la progression de la récupération de données
-    current_book +=1
+    save_image(
+        image_path,
+        book_category(u),
+        book_upc(u),
+        clean_book_title(u),
+        book_image(u))
+    progress_book = round((current_book / nb_book_url) * 100, 2)
+    # Affichage de la progression de la récupération de données
+    print("Progress....... " + str(progress_book) + " %\n")
+    current_book += 1
 
 
 # Display script end message
