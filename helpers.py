@@ -48,12 +48,11 @@ def init_csv(category, book_path):
             'Category;'
             'Review Rating;'
             'Image Url;'
-            'Image Path'
             '\n')
 
 
 # Function to write the book data within a file
-def write_book_values(url, book_path, img_path):
+def write_book_values(url, book_path):
     response = requests.get(url)
     response.encoding = 'UTF-8'
     # Check if webpage is reachable
@@ -116,8 +115,6 @@ def write_book_values(url, book_path, img_path):
             review_rating +
             ";" +
             image_url +
-            ";" +
-            img_path +
             '\n')
 
 
